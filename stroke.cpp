@@ -73,14 +73,42 @@ Mat getStrokeImage(Mat src) {
     Mat grad = getGradientImage(src);
     vector<Mat*> kernals = getKernals(DIRECT_NUM);
     vector<Mat*> responseMaps = getResponseMaps(grad, kernals);
-    kernals = getKernals(DIRECT_NUM);
+    kernals = getKernals(DIRECT_NUM, 3);
     vector<Mat> classificationMaps = getClassificationMap(responseMaps, grad);
     Mat strokeImage(src.rows, src.cols, CV_16U);
+    vector<Mat> filteredMaps;
     for (int i = 0; i < classificationMaps.size(); ++i) {
         Mat filtered;
-        filter2D(classificationMaps[i], filtered, CV_16U, *kernals[i]);
-        add(strokeImage, filtered, strokeImage);
+        filter2D(classificationMaps[i], filtered, CV_64F, *kernals[i]);
+        filteredMaps.push_back(filtered);
     }
-    bitwise_not(strokeImage, strokeImage);
+    double max = -9999999.0;
+    double min = 9999999.0;
+    for (int i = 0; i < src.rows; ++i) {
+        for (int j = 0; j < src.cols; ++j) {
+            double pixel = 0.0;
+            for (int k = 0; k < filteredMaps.size(); ++k) {
+                pixel += filteredMaps[k].at<double>(i, j);
+            }
+            if (pixel > max)
+                max = pixel;
+            if (pixel < min)
+                min = pixel;
+        }
+    }
+    for (int i = 0; i < src.rows; ++i) {
+        for (int j = 0; j < src.cols; ++j) {
+            double pixel = 0.0;
+            for (int k = 0; k < filteredMaps.size(); ++k) {
+                pixel += filteredMaps[k].at<double>(i, j);
+            }
+            pixel = (1.0 - (pixel - min) / (max - min)) * 65535.0;
+            strokeImage.at<ushort>(i, j) = (ushort)pixel;
+        }
+    }
+    Mat temp;
+    resize(strokeImage, temp, Size(strokeImage.cols / 2, strokeImage.rows / 2));
+    imshow("", temp);
+    waitKey(0);
     return strokeImage;
 }

@@ -34,7 +34,7 @@ Mat pencilSketch(Mat src, Mat texture) {
     for (int i = 0; i < src.rows; ++i) {
         for (int j = 0; j < src.cols; ++j) {
             double pixel1 = (double)(int)strokeImage.at<ushort>(i, j);
-            double pixel2 = (double)(int)toneImage.at<uchar>(i, j) / 255.0;
+            double pixel2 = (double)(int)texture.at<uchar>(i, j) / 255.0;
             strokeImage.at<ushort>(i, j) = (ushort)(pixel1 * pixel2);
         }
     }
