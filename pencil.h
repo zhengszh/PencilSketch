@@ -26,19 +26,27 @@ std::string getTypeOfMat(Mat mat) {
 Mat pencilSketch(Mat src, Mat texture) {
     Mat src_gray;
     cvtColor(src, src_gray, CV_BGR2GRAY);
+    cvtColor(src, src, CV_BGR2YCrCb);
+    vector<Mat> channels;
+    split(src, channels);
+    cout << getTypeOfMat(channels[0]) << " " << channels.size();
     Mat strokeImage = getStrokeImage(src_gray);
 
     Mat toneImage = getToneImage(src_gray);
     cvtColor(texture, texture, CV_BGR2GRAY);
-    texture = getTextureImage(src, texture, toneImage);
+    texture = getTextureImage(src_gray, texture, toneImage);
     for (int i = 0; i < src.rows; ++i) {
         for (int j = 0; j < src.cols; ++j) {
-            double pixel1 = (double)(int)strokeImage.at<ushort>(i, j);
-            double pixel2 = (double)(int)texture.at<uchar>(i, j) / 255.0;
-            strokeImage.at<ushort>(i, j) = (ushort)(pixel1 * pixel2);
+            double pixel1 = (double)(int)strokeImage.at<ushort>(i, j) / 65535.0;
+            double pixel2 = (double)(int)texture.at<uchar>(i, j);
+//            src.at<Vec3b>(i, j).val[0] = (uchar)(pixel1 * pixel2);
+
+            channels[0].at<uchar>(i, j) = (uchar)(pixel1 * pixel2);
         }
     }
-    imshow("", strokeImage);
+    merge(channels, src);
+    cvtColor(src, src, CV_YCrCb2BGR);
+    imshow("", src);
     waitKey(0);
     return strokeImage;
 }

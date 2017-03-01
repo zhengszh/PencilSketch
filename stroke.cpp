@@ -106,9 +106,5 @@ Mat getStrokeImage(Mat src) {
             strokeImage.at<ushort>(i, j) = (ushort)pixel;
         }
     }
-    Mat temp;
-    resize(strokeImage, temp, Size(strokeImage.cols / 2, strokeImage.rows / 2));
-    imshow("", temp);
-    waitKey(0);
     return strokeImage;
 }
