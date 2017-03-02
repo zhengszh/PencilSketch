@@ -68,12 +68,12 @@ vector<Mat> getClassificationMap(vector<Mat*> responseMaps, Mat grad) {
     }
     return result;
 }
-Mat getStrokeImage(Mat src) {
+Mat getStrokeImage(Mat src, int strokeWidth) {
     medianBlur(src, src, 3);
     Mat grad = getGradientImage(src);
     vector<Mat*> kernals = getKernals(DIRECT_NUM);
     vector<Mat*> responseMaps = getResponseMaps(grad, kernals);
-    kernals = getKernals(DIRECT_NUM, 3);
+    kernals = getKernals(DIRECT_NUM, strokeWidth);
     vector<Mat> classificationMaps = getClassificationMap(responseMaps, grad);
     Mat strokeImage(src.rows, src.cols, CV_16U);
     vector<Mat> filteredMaps;

@@ -14,6 +14,6 @@ Mat getGradientImage(Mat src);
 vector<Mat*> getKernals(int directNum, int lineWidth = 1);
 vector<Mat*> getResponseMaps(Mat src, vector<Mat*> kernals);
 vector<Mat> getClassificationMap(vector<Mat*> responseMaps, Mat grad);
-Mat getStrokeImage(Mat src);
+Mat getStrokeImage(Mat src, int strokeWidth);
 
 #endif //PENCILSKETCH_STROKE_H

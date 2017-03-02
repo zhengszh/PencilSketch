@@ -62,11 +62,10 @@ vector<double> getTargetHistogram() {
     }
     return result;
 }
-Mat getToneImage(Mat src) {
+Mat histogramMatching(Mat src, vector<double> targetHist) {
     Mat result(src.rows, src.cols, src.type());
     vector<double> srcHist = getHistogram(src);
     int levelNum = srcHist.size();
-    vector<double> targetHist = getTargetHistogram();
     vector<double> s(levelNum, 0.0);
     vector<double> g(levelNum, 0.0);
     vector<uchar> t(levelNum, 0);
@@ -77,10 +76,9 @@ Mat getToneImage(Mat src) {
         s[i] = sum1;
         g[i] = sum2;
     }
-    double min = 0.0;
     int pg = 0;
     for (int i = 0; i < levelNum; ++i) {
-        min = 1.0;
+        double min = 1.0;
         for (int j = 0; j < levelNum; ++j) {
             if ((g[j] - s[i]) < min && (g[j] - s[i]) >= 0) {
                 min = g[j] - s[i];
@@ -94,6 +92,11 @@ Mat getToneImage(Mat src) {
             result.at<uchar>(i, j) = t[src.at<uchar>(i, j)];
         }
     }
+    return result;
+}
+Mat getToneImage(Mat src) {
+    vector<double> targetHist = getTargetHistogram();
+    Mat result = histogramMatching(src, targetHist);
     blur(result, result, Size(10, 10));
 //    showHistogram(getHistogram(result));
     return result;

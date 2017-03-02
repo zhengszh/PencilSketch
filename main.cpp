@@ -6,6 +6,9 @@ int main(int argc, char** argv) {
         return -1;
     }
     Mat texture = imread(argv[2]);
-    pencilSketch(src, texture);
+    Mat result = pencilSketch(src, texture);
+    namedWindow("", CV_WINDOW_NORMAL);
+    imshow("", result);
+    waitKey(0);
     return 0;
 }
