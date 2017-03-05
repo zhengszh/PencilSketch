@@ -36,9 +36,9 @@ void showHistogram(vector<double> histogram) {
 
 vector<double> getTargetHistogram() {
     vector<double> result(256, 0.0);
-    double omega1 = 52.0;
-    double omega2 = 37.0;
-    double omega3 = 11.0;
+    double omega1 = 76.0;
+    double omega2 = 22.0;
+    double omega3 = 2.0;
     double sigmab = 9.0;
     double ua = 105.0;
     double ub = 225.0;

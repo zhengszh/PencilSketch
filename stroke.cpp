@@ -69,7 +69,7 @@ vector<Mat> getClassificationMap(vector<Mat*> responseMaps, Mat grad) {
     return result;
 }
 Mat getStrokeImage(Mat src, int strokeWidth) {
-    medianBlur(src, src, 3);
+//    medianBlur(src, src, 3);
     Mat grad = getGradientImage(src);
     vector<Mat*> kernals = getKernals(DIRECT_NUM);
     vector<Mat*> responseMaps = getResponseMaps(grad, kernals);

@@ -10,5 +10,6 @@ int main(int argc, char** argv) {
     namedWindow("", CV_WINDOW_NORMAL);
     imshow("", result);
     waitKey(0);
+    imwrite("/home/einzelkampfer/test.jpg", result);
     return 0;
 }
